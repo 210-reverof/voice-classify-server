@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -15,12 +16,12 @@ gender_labels = {
 }
 
 age_labels = {
-    0: "fifties",
-    1: "fourties",
-    2: "sixties",
-    3: "teens",
-    4: "thirties",
-    5: "twenties"
+    0: "50",
+    1: "40",
+    2: "60",
+    3: "10",
+    4: "30",
+    5: "20"
 }
 
 data_path = "storage/"
@@ -38,10 +39,9 @@ def get_age(out_data):
 
 
 def main_program():
-
     gender_weights, gender_means, gender_stddev = get_data_files(models_path, "gender", 10)
     age_weights, age_means, age_stddev = get_data_files(models_path, "age", 30)
-    np.set_printoptions(precision=3)
+    #np.set_printoptions(precision=3)
 
     num_gender_labels = len(gender_labels)
     num_age_labels = len(age_labels)
@@ -68,18 +68,17 @@ def main_program():
 
         gender_predict = gender_model.predict(data[0])
         age_predict = age_model.predict(data[1])
+
+        gender = get_gender(gender_predict)
+        age = get_age(age_predict)
+
+        data = {
+            "gender": gender,
+            "age": age
+        }
+
+        return data
         
-        gender_print = "{} ==> GENDER(lstm): {} gender_prob: {}".format(data_file,
-                        get_gender(gender_predict).upper(), gender_predict)
-        age_print = "{} ==> AGE(lstm): {} age_prob: {}".format(data_file,
-                        get_age(age_predict).upper(), age_predict)
-        
-        print('=' * max(len(gender_print), len(age_print)))
-        print()
-        print("g:", gender_predict)
-        print(age_print)
-        print()
-        print('=' * max(len(gender_print), len(age_print)))
 
 
 if __name__ == '__main__':
