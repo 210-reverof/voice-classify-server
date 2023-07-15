@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 @app.route('/classify', methods = ['POST'])  
 def success():  
+    print("hererreer")
     if request.method == 'POST':  
         f = request.files['file']
         f.save("storage/" + f.filename)
@@ -20,4 +21,4 @@ def success():
         return jsonify(result)
   
 if __name__ == '__main__':  
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')
